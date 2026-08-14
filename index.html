@@ -6,13 +6,15 @@
 <title>A Question For Miu</title>
 <style>
   :root {
-    --pink-50: #fff0f4;
-    --pink-100: #ffe0ea;
-    --pink-300: #ff9ebb;
-    --pink-500: #ff5c8a;
-    --pink-600: #e8437a;
-    --ink: #4a2334;
-    --ink-soft: #8a5c74;
+    --cream: #fdf6ec;
+    --peach: #ffe6c9;
+    --lavender: #e6dcf7;
+    --lavender-deep: #cbb7ec;
+    --gold: #e7b23d;
+    --rose: #dd8f75;
+    --rose-deep: #c8715a;
+    --ink: #4a3b42;
+    --ink-soft: #8d7a82;
     --white: #ffffff;
   }
 
@@ -29,7 +31,7 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: radial-gradient(circle at 50% 20%, var(--pink-50), var(--pink-100) 60%, #ffd3e0 100%);
+    background: linear-gradient(135deg, var(--cream) 0%, var(--peach) 45%, var(--lavender) 100%);
     color: var(--ink);
     display: flex;
     align-items: center;
@@ -38,9 +40,30 @@
     touch-action: manipulation;
   }
 
+  #bgDecor {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .decor-item {
+    position: absolute;
+    opacity: 0.3;
+    animation: twinkle ease-in-out infinite;
+    filter: drop-shadow(0 0 4px rgba(231, 178, 61, 0.3));
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.12; transform: scale(0.85); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+  }
+
   .stage {
     position: fixed;
     inset: 0;
+    z-index: 1;
   }
 
   .screen {
@@ -76,6 +99,7 @@
     font-size: clamp(0.95rem, 3.5vw, 1.1rem);
     margin: 0 0 2rem;
     min-height: 1.4em;
+    max-width: 26rem;
   }
 
   .buttons {
@@ -105,25 +129,23 @@
   }
 
   .btn-yes {
-    background: var(--pink-500);
+    background: linear-gradient(135deg, var(--rose), var(--gold));
     color: var(--white);
-    box-shadow: 0 8px 20px rgba(255, 92, 138, 0.4);
+    box-shadow: 0 8px 20px rgba(200, 113, 90, 0.35);
   }
 
   .btn-yes:hover {
-    background: var(--pink-600);
+    background: linear-gradient(135deg, var(--rose-deep), var(--gold));
   }
 
   .btn-no {
     background: var(--white);
     color: var(--ink-soft);
-    box-shadow: 0 4px 12px rgba(74, 35, 52, 0.12);
+    box-shadow: 0 4px 12px rgba(74, 59, 66, 0.12);
   }
 
-  #screen2 .btn-no {
-    position: absolute;
-    left: 0;
-    top: 0;
+  .btn-no.roaming {
+    position: fixed;
     z-index: 5;
     transition: left 0.15s ease, top 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   }
@@ -140,7 +162,7 @@
   }
 
   #screen3 .question {
-    background: linear-gradient(90deg, var(--pink-600), var(--pink-500));
+    background: linear-gradient(90deg, var(--rose-deep), var(--gold));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -192,6 +214,8 @@
 </head>
 <body>
 
+<div id="bgDecor"></div>
+
 <div class="stage">
 
   <section class="screen active" id="screen1">
@@ -210,8 +234,8 @@
     <p class="subtext">Choose wisely...</p>
     <div class="buttons">
       <button class="btn-yes" id="yes2">yes</button>
+      <button class="btn-no" id="no2">no</button>
     </div>
-    <button class="btn-no" id="no2">no</button>
   </section>
 
   <section class="screen" id="screen3">
@@ -236,7 +260,17 @@
     "That's not how this works 😄",
     "Try again, cutie.",
     "Hmm, my finger slipped there too. Try that again.",
-    "Error 404: correct answer not found. Try again."
+    "Error 404: correct answer not found. Try again.",
+    "Nice try, but that's not an option.",
+    "The universe said no to that answer.",
+    "Let's pretend that didn't happen 😅",
+    "I'll ask again, maybe it fixes itself.",
+    "That button is just for decoration.",
+    "Access denied. Please select yes.",
+    "Even my cat disagrees with that click.",
+    "Plot twist: yes was the answer all along.",
+    "You get one more try. Choose wisely.",
+    "My heart says you meant to click yes."
   ];
 
   var screen1 = document.getElementById("screen1");
@@ -251,10 +285,28 @@
     el.classList.add("active");
   }
 
+  // Background sparkles/stars decoration
+  function createBackgroundDecor() {
+    var container = document.getElementById("bgDecor");
+    var symbols = ["✨", "⭐", "💫", "🌟", "✨", "⭐", "💛"];
+    var count = 28;
+    for (var i = 0; i < count; i++) {
+      var el = document.createElement("span");
+      el.className = "decor-item";
+      el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      el.style.left = Math.random() * 100 + "%";
+      el.style.top = Math.random() * 100 + "%";
+      el.style.fontSize = (0.8 + Math.random() * 1.4) + "rem";
+      el.style.animationDuration = (2.5 + Math.random() * 3) + "s";
+      el.style.animationDelay = (Math.random() * 4) + "s";
+      container.appendChild(el);
+    }
+  }
+  createBackgroundDecor();
+
   // Screen 1 logic
   document.getElementById("yes1").addEventListener("click", function () {
     showScreen(screen2);
-    positionNoButton();
   });
 
   document.getElementById("no1").addEventListener("click", function () {
@@ -262,9 +314,10 @@
     noResponseEl.textContent = msg;
   });
 
-  // Screen 2 logic - runaway "no" button
+  // Screen 2 logic - runaway "no" button + growing "yes" button
   var noBtn2 = document.getElementById("no2");
   var yesBtn2 = document.getElementById("yes2");
+  var yesGrowth = 0;
 
   function getViewportSize() {
     var vv = window.visualViewport;
@@ -290,8 +343,25 @@
     noBtn2.style.top = y + "px";
   }
 
+  function activateRoaming() {
+    if (noBtn2.classList.contains("roaming")) return;
+    var rect = noBtn2.getBoundingClientRect();
+    noBtn2.style.left = rect.left + "px";
+    noBtn2.style.top = rect.top + "px";
+    noBtn2.classList.add("roaming");
+    void noBtn2.offsetWidth; // force layout so the next move transitions smoothly
+  }
+
+  function growYes() {
+    yesGrowth = Math.min(yesGrowth + 1, 8);
+    var scale = 1 + yesGrowth * 0.13;
+    yesBtn2.style.transform = "scale(" + scale.toFixed(2) + ")";
+  }
+
   function dodge() {
+    activateRoaming();
     positionNoButton();
+    growYes();
   }
 
   noBtn2.addEventListener("mouseover", dodge);
@@ -300,7 +370,7 @@
     dodge();
   }, { passive: false });
 
-  // Also dodge if pointer gets close, for fast mouse movements
+  // Also dodge if the pointer gets close, for fast mouse movements
   document.addEventListener("mousemove", function (e) {
     if (!screen2.classList.contains("active")) return;
     var rect = noBtn2.getBoundingClientRect();
@@ -313,7 +383,7 @@
   });
 
   window.addEventListener("resize", function () {
-    if (screen2.classList.contains("active")) {
+    if (screen2.classList.contains("active") && noBtn2.classList.contains("roaming")) {
       positionNoButton();
     }
   });
@@ -323,35 +393,14 @@
     launchHearts();
   });
 
-  // Screen 3 - floating hearts
+  // Screen 3 - floating hearts & sparkles
   function launchHearts() {
     var container = document.getElementById("floatingHearts");
     container.innerHTML = "";
-    var symbols = ["💗", "💕", "💖", "❤️", "💘"];
+    var symbols = ["💗", "💕", "✨", "⭐", "💖", "❤️", "🌟"];
     var count = 24;
 
-    for (var i = 0; i < count; i++) {
-      (function (i) {
-        setTimeout(function () {
-          var heart = document.createElement("div");
-          heart.className = "floating-heart";
-          heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-          heart.style.left = Math.random() * 100 + "%";
-          heart.style.setProperty("--drift", (Math.random() * 80 - 40) + "px");
-          heart.style.fontSize = (1 + Math.random() * 1.5) + "rem";
-          var duration = 3 + Math.random() * 3;
-          heart.style.animationDuration = duration + "s";
-          container.appendChild(heart);
-          setTimeout(function () {
-            heart.remove();
-          }, duration * 1000 + 100);
-        }, i * 150);
-      })(i);
-    }
-
-    // keep spawning a gentle stream of hearts afterwards
-    clearInterval(window.__heartInterval);
-    window.__heartInterval = setInterval(function () {
+    function spawnHeart() {
       var heart = document.createElement("div");
       heart.className = "floating-heart";
       heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
@@ -364,7 +413,15 @@
       setTimeout(function () {
         heart.remove();
       }, duration * 1000 + 100);
-    }, 600);
+    }
+
+    for (var i = 0; i < count; i++) {
+      setTimeout(spawnHeart, i * 150);
+    }
+
+    // keep spawning a gentle stream afterwards
+    clearInterval(window.__heartInterval);
+    window.__heartInterval = setInterval(spawnHeart, 600);
   }
 })();
 </script>
