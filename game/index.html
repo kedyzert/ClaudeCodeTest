@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wave Defense</title>
+<link rel="stylesheet" href="./style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<canvas id="game-canvas"></canvas>
+
+<div id="hud" class="hud hidden">
+  <div class="crosshair"></div>
+  <div class="hud-top">
+    <div class="hud-pill" id="hud-wave">Wave 1</div>
+    <div class="hud-pill" id="hud-score">Score: 0</div>
+  </div>
+  <div class="hud-bottom">
+    <div class="hud-weapon-box">
+      <div class="hud-weapon-name" id="hud-weapon">Pistol</div>
+      <div class="hud-ammo" id="hud-ammo">12 / 12</div>
+      <div class="hud-reload hidden" id="hud-reload">Reloading&hellip;</div>
+    </div>
+    <div class="hud-grenade-box hidden" id="hud-grenade-wrap">
+      <span id="hud-grenade">Grenades: 0</span>
+    </div>
+  </div>
+  <div class="hud-hint">1 Pistol &middot; 2 Machine Gun &middot; 3 Rocket &middot; R Reload &middot; G Grenade</div>
+</div>
+
+<div id="menu-overlay" class="overlay">
+  <div class="overlay-panel">
+    <h1 id="menu-title">Wave Defense</h1>
+    <p id="menu-subtitle">WASD to move, mouse to aim, click to shoot. Don't let anything reach you.</p>
+    <button id="menu-button" class="primary-button">Click to Start</button>
+  </div>
+</div>
+
+<div id="upgrade-overlay" class="overlay hidden">
+  <div class="overlay-panel">
+    <h1 id="upgrade-wave-text">Wave cleared!</h1>
+    <p>Choose an upgrade</p>
+    <div id="upgrade-cards" class="upgrade-cards"></div>
+  </div>
+</div>
+
+<div id="gameover-overlay" class="overlay hidden">
+  <div class="overlay-panel">
+    <h1>Overrun</h1>
+    <p id="gameover-summary">You reached wave 1.</p>
+    <button id="gameover-restart" class="primary-button">Try Again</button>
+  </div>
+</div>
+
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

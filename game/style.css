@@ -1,0 +1,236 @@
+:root {
+  --bg: #0e1420;
+  --panel: rgba(18, 26, 38, 0.86);
+  --accent: #5ac8fa;
+  --accent-warm: #ff8a5c;
+  --text: #eef3f8;
+  --text-soft: #9fb1c4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#game-canvas {
+  position: fixed;
+  inset: 0;
+  display: block;
+  outline: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.hud {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hud-top {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.hud-pill {
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.hud-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.hud-weapon-box {
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  padding: 0.75rem 1.25rem;
+  border-radius: 1rem;
+  min-width: 10rem;
+}
+
+.hud-weapon-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.hud-ammo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 0.15rem;
+}
+
+.hud-reload {
+  margin-top: 0.25rem;
+  color: var(--accent-warm);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.hud-grenade-box {
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  padding: 0.6rem 1rem;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+
+.hud-hint {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  background: var(--panel);
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+}
+
+.crosshair {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.crosshair::before,
+.crosshair::after {
+  content: "";
+  position: absolute;
+  background: var(--text);
+  opacity: 0.85;
+}
+
+.crosshair::before {
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.crosshair::after {
+  top: 50%;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 10, 18, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.overlay-panel {
+  background: var(--panel);
+  border-radius: 1.25rem;
+  padding: 2.5rem;
+  max-width: 32rem;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.overlay-panel h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.8rem;
+}
+
+.overlay-panel p {
+  color: var(--text-soft);
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent), #3aa0e0);
+  color: #04121f;
+  border: none;
+  padding: 0.85rem 2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  font-family: inherit;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+}
+
+.primary-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.upgrade-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.9rem;
+}
+
+.upgrade-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  font-family: inherit;
+}
+
+.upgrade-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+.upgrade-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+.upgrade-card p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+}
