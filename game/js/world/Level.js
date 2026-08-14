@@ -46,8 +46,9 @@ export function buildLevel(scene) {
   addWall(0.3, wallHeight, arena.maxZ - arena.minZ, arena.minX, wallHeight / 2, (arena.minZ + arena.maxZ) / 2, wallMat);
   addWall(0.3, wallHeight, arena.maxZ - arena.minZ, arena.maxX, wallHeight / 2, (arena.minZ + arena.maxZ) / 2, wallMat);
 
-  // Front wall, split around the corridor mouth
-  const leftFrontWidth = corridor.halfWidth - arena.minX;
+  // Front wall, split around the corridor mouth (a gap from -halfWidth to
+  // +halfWidth so the corridor is actually open into the arena).
+  const leftFrontWidth = -corridor.halfWidth - arena.minX;
   addWall(leftFrontWidth, wallHeight, 0.3, arena.minX + leftFrontWidth / 2, wallHeight / 2, arena.maxZ, wallMat);
   const rightFrontWidth = arena.maxX - corridor.halfWidth;
   addWall(rightFrontWidth, wallHeight, 0.3, corridor.halfWidth + rightFrontWidth / 2, wallHeight / 2, arena.maxZ, wallMat);
