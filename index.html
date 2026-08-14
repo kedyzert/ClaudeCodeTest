@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Question For Miu</title>
+<style>
+  :root {
+    --pink-50: #fff0f4;
+    --pink-100: #ffe0ea;
+    --pink-300: #ff9ebb;
+    --pink-500: #ff5c8a;
+    --pink-600: #e8437a;
+    --ink: #4a2334;
+    --ink-soft: #8a5c74;
+    --white: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(circle at 50% 20%, var(--pink-50), var(--pink-100) 60%, #ffd3e0 100%);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    touch-action: manipulation;
+  }
+
+  .stage {
+    position: fixed;
+    inset: 0;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px) scale(0.98);
+    transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s;
+  }
+
+  .screen.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  .question {
+    font-size: clamp(1.6rem, 6vw, 2.6rem);
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+    line-height: 1.25;
+  }
+
+  .subtext {
+    color: var(--ink-soft);
+    font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+    margin: 0 0 2rem;
+    min-height: 1.4em;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: clamp(1rem, 4vw, 1.15rem);
+    font-weight: 600;
+    padding: 0.9rem 2rem;
+    min-height: 44px;
+    min-width: 44px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  button:active {
+    transform: scale(0.96);
+  }
+
+  .btn-yes {
+    background: var(--pink-500);
+    color: var(--white);
+    box-shadow: 0 8px 20px rgba(255, 92, 138, 0.4);
+  }
+
+  .btn-yes:hover {
+    background: var(--pink-600);
+  }
+
+  .btn-no {
+    background: var(--white);
+    color: var(--ink-soft);
+    box-shadow: 0 4px 12px rgba(74, 35, 52, 0.12);
+  }
+
+  #screen2 .btn-no {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    transition: left 0.15s ease, top 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .heart-icon {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+    margin-bottom: 1rem;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+
+  #screen3 .question {
+    background: linear-gradient(90deg, var(--pink-600), var(--pink-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .final-text {
+    font-size: clamp(1.05rem, 4vw, 1.35rem);
+    max-width: 32rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .floating-hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .floating-heart {
+    position: absolute;
+    bottom: -10%;
+    font-size: 1.5rem;
+    animation: float-up linear forwards;
+    opacity: 0.9;
+  }
+
+  @keyframes float-up {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0.9;
+    }
+    100% {
+      transform: translateY(-110vh) translateX(var(--drift, 0px)) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .buttons {
+      gap: 0.75rem;
+    }
+    button {
+      padding: 0.8rem 1.6rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <section class="screen active" id="screen1">
+    <div class="heart-icon">💗</div>
+    <h1 class="question">Do you love me?</h1>
+    <p class="subtext" id="noResponse">&nbsp;</p>
+    <div class="buttons">
+      <button class="btn-yes" id="yes1">yes</button>
+      <button class="btn-no" id="no1">no</button>
+    </div>
+  </section>
+
+  <section class="screen" id="screen2">
+    <div class="heart-icon">🥺</div>
+    <h1 class="question">Do you want to be my girlfriend, Miu?</h1>
+    <p class="subtext">Choose wisely...</p>
+    <div class="buttons">
+      <button class="btn-yes" id="yes2">yes</button>
+    </div>
+    <button class="btn-no" id="no2">no</button>
+  </section>
+
+  <section class="screen" id="screen3">
+    <div class="floating-hearts" id="floatingHearts"></div>
+    <h1 class="question">Yes! 🎉</h1>
+    <p class="final-text">
+      I knew it, Miu 💕 — you just made me the happiest person alive.
+      I love you, and I can't wait to call you my girlfriend.
+    </p>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var noResponses = [
+    "Wrong answer, try again.",
+    "I think you clicked the wrong button.",
+    "Are you sure you didn't mix up yes and no?",
+    "That's not how this works 😄",
+    "Try again, cutie.",
+    "Hmm, my finger slipped there too. Try that again.",
+    "Error 404: correct answer not found. Try again."
+  ];
+
+  var screen1 = document.getElementById("screen1");
+  var screen2 = document.getElementById("screen2");
+  var screen3 = document.getElementById("screen3");
+  var noResponseEl = document.getElementById("noResponse");
+
+  function showScreen(el) {
+    [screen1, screen2, screen3].forEach(function (s) {
+      s.classList.remove("active");
+    });
+    el.classList.add("active");
+  }
+
+  // Screen 1 logic
+  document.getElementById("yes1").addEventListener("click", function () {
+    showScreen(screen2);
+    positionNoButton();
+  });
+
+  document.getElementById("no1").addEventListener("click", function () {
+    var msg = noResponses[Math.floor(Math.random() * noResponses.length)];
+    noResponseEl.textContent = msg;
+  });
+
+  // Screen 2 logic - runaway "no" button
+  var noBtn2 = document.getElementById("no2");
+  var yesBtn2 = document.getElementById("yes2");
+
+  function getViewportSize() {
+    var vv = window.visualViewport;
+    return {
+      width: vv ? vv.width : window.innerWidth,
+      height: vv ? vv.height : window.innerHeight
+    };
+  }
+
+  function positionNoButton() {
+    var vp = getViewportSize();
+    var btnWidth = noBtn2.offsetWidth || 100;
+    var btnHeight = noBtn2.offsetHeight || 44;
+    var margin = 12;
+
+    var maxX = Math.max(margin, vp.width - btnWidth - margin);
+    var maxY = Math.max(margin, vp.height - btnHeight - margin);
+
+    var x = margin + Math.random() * (maxX - margin);
+    var y = margin + Math.random() * (maxY - margin);
+
+    noBtn2.style.left = x + "px";
+    noBtn2.style.top = y + "px";
+  }
+
+  function dodge() {
+    positionNoButton();
+  }
+
+  noBtn2.addEventListener("mouseover", dodge);
+  noBtn2.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    dodge();
+  }, { passive: false });
+
+  // Also dodge if pointer gets close, for fast mouse movements
+  document.addEventListener("mousemove", function (e) {
+    if (!screen2.classList.contains("active")) return;
+    var rect = noBtn2.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+    var dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+    if (dist < 70) {
+      dodge();
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (screen2.classList.contains("active")) {
+      positionNoButton();
+    }
+  });
+
+  yesBtn2.addEventListener("click", function () {
+    showScreen(screen3);
+    launchHearts();
+  });
+
+  // Screen 3 - floating hearts
+  function launchHearts() {
+    var container = document.getElementById("floatingHearts");
+    container.innerHTML = "";
+    var symbols = ["💗", "💕", "💖", "❤️", "💘"];
+    var count = 24;
+
+    for (var i = 0; i < count; i++) {
+      (function (i) {
+        setTimeout(function () {
+          var heart = document.createElement("div");
+          heart.className = "floating-heart";
+          heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+          heart.style.left = Math.random() * 100 + "%";
+          heart.style.setProperty("--drift", (Math.random() * 80 - 40) + "px");
+          heart.style.fontSize = (1 + Math.random() * 1.5) + "rem";
+          var duration = 3 + Math.random() * 3;
+          heart.style.animationDuration = duration + "s";
+          container.appendChild(heart);
+          setTimeout(function () {
+            heart.remove();
+          }, duration * 1000 + 100);
+        }, i * 150);
+      })(i);
+    }
+
+    // keep spawning a gentle stream of hearts afterwards
+    clearInterval(window.__heartInterval);
+    window.__heartInterval = setInterval(function () {
+      var heart = document.createElement("div");
+      heart.className = "floating-heart";
+      heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      heart.style.left = Math.random() * 100 + "%";
+      heart.style.setProperty("--drift", (Math.random() * 80 - 40) + "px");
+      heart.style.fontSize = (1 + Math.random() * 1.5) + "rem";
+      var duration = 3 + Math.random() * 3;
+      heart.style.animationDuration = duration + "s";
+      container.appendChild(heart);
+      setTimeout(function () {
+        heart.remove();
+      }, duration * 1000 + 100);
+    }, 600);
+  }
+})();
+</script>
+
+</body>
+</html>
